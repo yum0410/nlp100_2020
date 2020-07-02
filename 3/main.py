@@ -34,4 +34,24 @@ pattern = "(ファイル):(.*?)\|"
 for line in data20["text"].split("\n"):
     section_line = re.search(pattern, line) 
     if section_line is not None:
-        print(section_line.group(2))
+        # print(section_line.group(2))
+        pass
+
+# 25
+import pprint
+from collections import OrderedDict
+p1 = re.compile("\{\{基礎情報")
+p2 = re.compile("\|(?P<key>.*?)=(?P<value>.*)")
+p3 = re.compile("^\}\}")
+base_info_flag = False
+template_list = []
+for line in data20["text"].split("\n"):
+    if p1.match(line):
+        base_info_flag = True
+    if base_info_flag:
+        data = p3.match(line)
+        if p2.match(line):
+            template_list.append((p2.match(line).group(1), p2.match(line).group(2)))
+        elif p3.match(line):
+            break
+pprint.pprint(OrderedDict(template_list))
