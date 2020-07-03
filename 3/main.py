@@ -54,4 +54,11 @@ for line in data20["text"].split("\n"):
             template_list.append((p2.match(line).group(1), p2.match(line).group(2)))
         elif p3.match(line):
             break
-pprint.pprint(OrderedDict(template_list))
+# pprint.pprint(OrderedDict(template_list))
+
+# 26
+template_list_drop_markup = []
+for x in template_list:
+    template_list_drop_markup.append((x[0], re.sub("'{2,5}", "", x[1])))
+template_list_drop_markup = OrderedDict(template_list_drop_markup)
+pprint.pprint(template_list_drop_markup)
