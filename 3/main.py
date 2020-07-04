@@ -62,3 +62,12 @@ for x in template_list:
     template_list_drop_markup.append((x[0], re.sub("'{2,5}", "", x[1])))
 template_list_drop_markup = OrderedDict(template_list_drop_markup)
 pprint.pprint(template_list_drop_markup)
+
+# 27
+template_list_drop_internal_link = []
+p1 = re.compile("\[\[(?P<title>.*?)\|(?P<view>.*?)\]\]")
+for key, value in template_list_drop_markup.items():
+    if p1.search(value):
+        print(p1.search(value).group(2).split("|")[-1])
+
+# 28
