@@ -59,15 +59,36 @@ for line in data20["text"].split("\n"):
 # 26
 template_list_drop_markup = []
 for x in template_list:
-    template_list_drop_markup.append((x[0], re.sub("'{2,5}", "", x[1])))
+    template_list_drop_markup.append((x[0].strip(), re.sub("'{2,5}", "", x[1].strip())))
 template_list_drop_markup = OrderedDict(template_list_drop_markup)
-pprint.pprint(template_list_drop_markup)
+# pprint.pprint(template_list_drop_markup)
 
 # 27
 template_list_drop_internal_link = []
-p1 = re.compile("\[\[(?P<title>.*?)\|(?P<view>.*?)\]\]")
+p1 = re.compile("\[\[(?:[^|]*?\|)??([^|]*?)\]\]", re.MULTILINE + re.VERBOSE)
 for key, value in template_list_drop_markup.items():
     if p1.search(value):
-        print(p1.search(value).group(2).split("|")[-1])
+        template_list_drop_internal_link.append((key, p1.sub(r'\1', value)))
+    else:
+        template_list_drop_internal_link.append((key, value))
+template_list_drop_internal_link = OrderedDict(template_list_drop_internal_link)
+pprint.pprint(template_list_drop_internal_link)
 
 # 28
+# 外部リンクの除去  [http://xxxx] 、[http://xxx xxx]
+template_list_drop_outer_link = []
+p1 = re.compile("\[http:\/\/(?:[^\s]*?\s)?([^]]*?)\]", re.MULTILINE + re.VERBOSE)
+for key, value in template_list_drop_internal_link.items():
+    if p1.search(value):
+        template_list_drop_outer_link.append((key, p1.sub(r'\1', value)))
+    else:
+        template_list_drop_outer_link.append((key, value))
+template_list_drop_outer_link = OrderedDict(template_list_drop_outer_link)
+# <br>、<ref>の除去
+p2 = re.compile("<\/?[br|ref][^>]*?>")
+for key, value in template_list_drop_outer_link.items():
+    if p2.search(value):
+        template_list_drop_outer_link[key] = p2.sub("", value)
+    else:
+        template_list_drop_outer_link[key] = value
+pprint.pprint(template_list_drop_outer_link)
