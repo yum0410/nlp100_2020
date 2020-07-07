@@ -59,5 +59,22 @@ for line in parse_neko_text:
     for i in range(len(line)-3):
         if line[i]["pos"] == "名詞" and line[i+1]["surface"] == "の" and line[i+2]["pos"] == "名詞":
             noun_phrase.append(line[i]["surface"]+line[i+1]["surface"]+line[i+2]["surface"])
+# print(sorted(set(noun_phrase)))
+
+# 34
+parse_neko_text = split_parse_text()
+noun_phrase = []
+for line in parse_neko_text:
+    join_noun = []
+    for l in line:
+        if l["pos"] == "名詞":
+            join_noun.append(l["surface"])
+        else:
+            if len(join_noun) > 1:
+                noun_phrase.append("".join(join_noun))
+                join_noun = []
+    else:
+        if len(join_noun) > 1:
+            noun_phrase.append("".join(join_noun))
 print(sorted(set(noun_phrase)))
 
