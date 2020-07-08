@@ -76,5 +76,18 @@ for line in parse_neko_text:
     else:
         if len(join_noun) > 1:
             noun_phrase.append("".join(join_noun))
-print(sorted(set(noun_phrase)))
+# print(sorted(set(noun_phrase)))
 
+# 35
+from collections import Counter
+parse_neko_text = split_parse_text()
+words = []
+for line in parse_neko_text:
+    for l in line:
+        words.append(l["surface"])
+# print(Counter(words).most_common())
+
+# 36
+import matplotlib.pyplot as plt
+TOP10 = Counter(words).most_common(10)
+plt.bar([x[0] for x in TOP10], [x[1] for x in TOP10])
